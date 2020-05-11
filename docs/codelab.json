@@ -1,0 +1,22 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2020-05-11T04:48:50Z",
+  "id": "",
+  "duration": 51,
+  "title": "Docker Workshop",
+  "authors": "Kevin",
+  "summary": "Workshop Docker",
+  "source": "1pAGNybzJR6X5clT9XstI4g4wBczSiAHixxqo_lcN3Vw",
+  "theme": "web",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "Web"
+  ],
+  "tags": [],
+  "url": ""
+}

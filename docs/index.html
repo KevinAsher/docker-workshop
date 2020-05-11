@@ -1,0 +1,217 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Docker Workshop</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id=""
+                  title="Docker Workshop"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Introdução" duration="0">
+        <p class="image-container"><img style="width: 624.00px" src="img\237b563ee59fa996.png"></p>
+<h2 is-upgraded><strong>O que será visto</strong></h2>
+<p>Neste workshop, será visto o funcionamento básico do Docker, por meio de um pequeno projeto. As funcionalidades exploradas serão:</p>
+<ul>
+<li>Criação de imagens de containers</li>
+<li>Execução de containers</li>
+<li>Volumes de containers</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Instalação" duration="20">
+        <h2 is-upgraded><strong>Baixar Docker Toolbox - WINDOWS</strong></h2>
+<p>Acesse <a href="https://github.com/docker/toolbox/releases" target="_blank">https://github.com/docker/toolbox/releases</a> e clica no link com extensão .exe.</p>
+<p>Seguir os passos do instalador, e marcar opções conforme abaixo (como o virtualbox já existe na sua máquina, neste caso não é necessário).</p>
+<aside class="warning"><p><strong>Atenção:</strong> Se não tiver Git instalado na sua máquina (última opção na imagem abaixo), selecione-a para ser incluída na instalação. Se não tiver certeza, selecione-a de qualquer jeito. Iremos trabalhar na linha de comando chamado <em>bash </em>que está incluído no Git.</p>
+</aside>
+<p class="image-container"><img style="width: 498.00px" src="img\9ab348a3f6fca7c1.png"></p>
+<p>Em seguida, seguir com as opções padrões do instalador até completar a instalação.</p>
+<h3 is-upgraded>Configuração inicial</h3>
+<p>Na área de trabalho, clique no atalho de Docker QuickStart. Com isso, verá a execução automática da configuração inicial do Docker.</p>
+<p class="image-container"><img style="width: 75.00px" src="img\8c19d37aebf70a94.png"></p>
+<p>Após instalação, deverá ver uma tela similar a esta, que é a linha de comando bash onde iremos trabalhar.</p>
+<p class="image-container"><img style="width: 624.00px" src="img\c8085fe6cc869f05.png"></p>
+<h2 is-upgraded><strong>Baixar Docker - LINUX</strong></h2>
+<p>Tem várias maneiras de instalar, se gostaria de instalar pelo gerenciador de pacotes do seu distro acesse <a href="https://docs.docker.com/engine/install/" target="_blank">https://docs.docker.com/engine/install/</a> para ver as opções. Para uma instalação fácil e rápida, execute o script abaixo para baixar e instalar o Docker.</p>
+<aside class="warning"><p><strong>Atenção:</strong> Nunca baixe scripts e instale da forma abaixo a menos que seja de fontes confiáveis.</p>
+</aside>
+<pre>$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh</pre>
+<p>Use a linha abaixo para usar o docker com o usuário sem root (pra não ter que ficar dando sudo todo momento). Substituí NOME_USUARIO pelo nome do seu usuário.</p>
+<pre>$ sudo usermod -aG docker NOME_USUARIO
+</pre>
+<p>Tudo pronto, agora podemos iniciar.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Hello World Docker" duration="1">
+        <h2 is-upgraded>Primeiro comando</h2>
+<p>Para verificar que tudo está funcionando, vamos rodar o primeiro comando (equivalente do ‘Hello World&#39;, mas no docker), rode o comando abaixo.</p>
+<pre>$ docker container run hello-world
+Unable to find image &#39;hello-world:latest&#39; locally
+latest: Pulling from library/hello-world
+0e03bdcc26d7: Pull complete
+Digest: sha256:8e3114318a995a1ee497790535e7b88365222a21771ae7e53687ad76563e8e76
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the &#34;hello-world&#34; image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
+</pre>
+<p>Se tiver uma saída similar a de cima, então tudo está ok e podemos prosseguir com o workshop.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Uma pequena aplicação em PHP" duration="30">
+        <h2 is-upgraded><strong>Estrutura de pastas</strong></h2>
+<p>Vamos criar a estrutura de pasta para este tutorial que estarão neste formato:</p>
+<p><em>docker-workshop/</em></p>
+<p><em>----Dockerfile</em></p>
+<p><em>----src/</em></p>
+<p><em>--------index.php</em></p>
+<pre>$ cd ~
+$ mkdir docker-workshop
+$ cd docker-workshop
+$ mkdir src
+
+</pre>
+<p>Caminhos relativos &#34;./&#34;  neste caso são referente a pasta docker-workshop.</p>
+<h2 is-upgraded><strong>Arquivos do projeto</strong></h2>
+<p>Crie os seguintes arquivos.</p>
+<h3 is-upgraded><strong>./src/index.php</strong></h3>
+<pre><code>&lt;?php
+
+echo &#34;Hello World&#34;;</code></pre>
+<h3 is-upgraded>.<strong>/Dockerfile (arquivo sem extensão)</strong></h3>
+<pre>FROM php:7.2-apache
+
+# copiar os conteúdos para dentro da pasta /var/www/html/ na imagem
+COPY src/ /var/www/html/
+
+# abrir a porta 80 (isso já é realizado na imagem que herdamos, então é opcional)
+EXPOSE 80
+
+</pre>
+<h2 is-upgraded><strong>Criar a imagem</strong></h2>
+<p>O arquivo Dockerfile contém as diretrizes para a construção da imagem. Para executar essas diretrizes e fazer a <em>build</em> da imagem, executamos o seguinte comando:</p>
+<pre>$ docker build -t my-php-app .
+Sending build context to Docker daemon  3.584kB
+Step 1/3 : FROM php:7.2-apache
+7.2-apache: Pulling from library/php
+54fec2fa59d0: Pull complete
+cc4504446071: Pull complete
+f8d55b89827d: Pull complete
+6bf7f8bea876: Pull complete
+81ecb6839daa: Pull complete
+94884188472c: Pull complete
+1d3e02b28167: Pull complete
+03a31d869fe5: Pull complete
+5b3d5336367f: Pull complete
+262c36627fb5: Pull complete
+045ccfa5e17b: Pull complete
+5d115e5730b2: Pull complete
+cf05104e84c8: Pull complete
+0a464b9c9bfe: Pull complete
+Digest: sha256:944bc075f7e6852e30517428b53f5bcf33034afddb50fa32867efcc84c939f82
+Status: Downloaded newer image for php:7.2-apache
+ ---&gt; c4e60279a473
+Step 2/3 : COPY src/ /var/www/html/
+ ---&gt; f0c7f8c11082
+Step 3/3 : EXPOSE 80
+ ---&gt; Running in a2ed05d3891b
+Removing intermediate container a2ed05d3891b
+ ---&gt; 39d9f3d788b6
+Successfully built 39d9f3d788b6
+Successfully tagged my-php-app:latest
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. 
+All files and directories added to build context will have &#39;-rwxr-xr-x&#39; permissions. 
+It is recommended to double check and reset permissions for sensitive files and directories.
+
+
+</pre>
+<h2 is-upgraded>Rodar um container/instância da imagem</h2>
+<pre>$ docker container run -p 8080:80 -d --name my-running-app my-php-app
+b43f252969b20934c7bb42022bb6d7700b890732ea0c91487123b5298f1ac38c
+</pre>
+<p>O comando acima irá rodar um container como base a imagem <em>my-php-app </em>que criamos anteriormente. Também, damos o nome <em>my-running-app</em> ao container que pode ser referenciado depois. Note a seção do comando que diz &#34;<em>-p 8080:80&#34;</em>, isso significa que estamos mapeando a porta 8080 do HOST (a sua máquina) para a porta 80 do container. A flag <em>-d </em>faz com que o processo principal do container seja executado</p>
+<h3 is-upgraded><strong>Veja a página web que você criou</strong></h3>
+<p>Para quem está no Windows, é necessário descobrir o ip da máquina virtual que o Docker Engine se encontra (mais sobre isso na nota abaixo), para isso, rode o seguinte comando:</p>
+<pre>$ docker-machine ip
+192.168.99.101
+</pre>
+<p>Neste caso, o ip retornado é <strong>192.168.99.101</strong>, então acessamos o site pelo endereço <a href="http://192.168.99.101:8080" target="_blank">http://192.168.99.101:8080</a> no navegador. </p>
+<p>Para usuários no Linux, basta acessar <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> no seu navegador.</p>
+<p class="image-container"><img style="width: 404.00px" src="img\bb445ca6835f6038.png"></p>
+<h2 is-upgraded><strong>Volumes em containers</strong></h2>
+<p>Se tentar alterar a mensagem sendo exibida no navegador, verá que a página não irá refletir a alteração, por exemplo, altere o arquivo abaixo conforme abaixo e atualiza a página do navegador.</p>
+<h3 is-upgraded><strong>./src/index.php</strong></h3>
+<pre><code>&lt;?php
+
+echo &#34;Olá Mundo&#34;;</code></pre>
+<p class="image-container"><img style="width: 404.00px" src="img\a879bf76bce47a04.png"></p>
+<p>O que está acontecendo? Bom, o container não enxerga as atualizações feitas no arquivo, porque o container é a &#34;instância&#34; de uma imagem, e a imagem não incorporou a alteração feita no arquivo. Uma maneira de resolver isso, seria recriar a imagem com a nova alteração, porém isso causa um gargalo no tempo de desenvolvimento. Portanto, uma outra solução que funciona bem para o ambiente de desenvolvimento, é o compartilhamento de uma pasta da sua máquina para dentro do container. A terminologia usada para essa estratégia é chamada de <strong><em>volume bind mount</em></strong>, mas antes de fazer isso vamos remover o container em andamento e recriá-lo com essa funcionalidade.</p>
+<p>Na linha de comando, vamos parar o container, remové-lo, e finalmente recriar:</p>
+<pre>$ docker container stop my-running-app
+my-running-app
+
+$ docker container rm my-running-app
+my-running-app
+
+$ docker container run -p 8080:80 --name my-running-app -d -v $(pwd)/src:/var/www/html my-php-app
+50f13d85587cc9434b983ac8aa45abe95b99e9a712a719f0723e9f9c3e353bc5</pre>
+<p>Note o novo parâmetro <code>-v $(pwd)/src:/var/www/html</code>, o parâmetro especifica o caminho da pasta <em>src, </em>para dentro do container no caminho<em> /var/www/html. </em>Pronto! Agora qualquer atualização feita no arquivo php, será refletida imediatamente no container. Tente fazer algumas alterações no arquivo php e confira os resultados no navegador.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>
